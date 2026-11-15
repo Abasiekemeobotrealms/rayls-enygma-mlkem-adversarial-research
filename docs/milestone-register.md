@@ -17,13 +17,13 @@ This research does not establish system-wide post-quantum security, production e
 ## 2. Repository separation
 
 **Official source repository**
-- Path: `/workspaces/Enygma`
+- Repository: `raylsnetwork/Enygma`
 - Source under test: `enygma_dvp/src`
 - Branch: `main`
 - Revision: `79c82dfb57595681b03d8da344702ef606f3a621`
 
 **Private research repository**
-- Path: `/workspaces/rayls-enygma-mlkem-adversarial-research`
+- Repository: `Abasiekemeobotrealms/rayls-enygma-mlkem-adversarial-research`
 - GitHub: `Abasiekemeobotrealms/rayls-enygma-mlkem-adversarial-research`
 - Visibility: Private
 
@@ -83,7 +83,7 @@ Research implication: malformed-length and correctly sized corrupted ciphertexts
 **Status:** Passed. Permanent tests executed successfully.
 
 Test file:
-`/workspaces/Enygma/enygma_dvp/src/tests/scan_mlkem_adversarial_test.go`
+`enygma_dvp/src/tests/scan_mlkem_adversarial_test.go`
 
 ### EXP-MLK-002 — Invalid ciphertext lengths
 
@@ -131,7 +131,7 @@ These findings apply to the tested fixtures and mutation. They do not establish 
 **Status:** Existing integration-test source inspected; independent execution not completed.
 
 **Source file:**
-`/workspaces/Enygma/enygma_dvp/test/26_v2_erc20_partial_withdraw_test.go`
+`enygma_dvp/test/26_v2_erc20_partial_withdraw_test.go`
 
 **Test:**
 `TestV2Erc20PartialWithdraw_RecoverChangeWithoutCiphertext`
@@ -291,7 +291,7 @@ The test therefore demonstrates acceptance of this canonical upper-bound token I
 
 ### Execution evidence
 
-Executed from `/workspaces/Enygma/enygma_dvp/src`:
+Executed from `enygma_dvp/src`:
 
 - `go test ./core -run '^TestScanForErc20Notes_AcceptsTokenIDAtScalarFieldUpperBoundary$' -count=1 -v` — passed.
 - `go test ./core -count=1` — complete core package passed.
@@ -347,3 +347,21 @@ The preserved test asserts rejection of 95-byte and 97-byte plaintexts and accep
 - The exact execution command and raw output should not be inferred from the test source.
 
 **Assessment:** The preserved test documents the expected 96-byte payment-note plaintext boundary. Its result should be interpreted within that validation path and not conflated with the separate private-tag scan-interruption experiment EXP-TAG-001.
+
+## EXP-MLK-006 — Malformed capsule deposit runtime reachability
+
+**Status:** PASS — local Hardhat Payment deployment only.
+
+**Preserved test:** `tests/29_v2_malformed_capsule_deposit_test.go`
+
+**Experiment record:** `experiments/EXP-MLK-006.md`
+
+**Test:** `TestEXP_MLK_006_MalformedCapsuleDepositRuntimeReachability`
+
+**Result:** Five `depositV2` transactions were mined successfully: capsule lengths 0, 1, 1087, 1089, and the valid 1088-byte control. All five corresponding `EncryptedNote` events were retrieved through RPC `FilterLogs`. The production native ERC-20 scanner classified the four malformed capsules as `RejectBadCapsule` and recovered the later valid control note without a fatal error.
+
+**Artifact SHA-256:** `388223157b4aee12883f09071af249a428c668cdc896812a958e30e11daeb73d`
+
+**Reproduction:** See the exact command and environment in `experiments/EXP-MLK-006.md`.
+
+**Evidence boundary:** This demonstrates runtime reachability on the initialized local Hardhat deployment. It does not establish behavior on a production Rayls network, exploitation, loss of funds, or denial of service.

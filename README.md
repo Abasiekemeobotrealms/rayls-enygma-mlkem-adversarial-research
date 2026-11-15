@@ -25,6 +25,8 @@ This repository preserves research artifacts and findings. It is separate from t
 - `tests/payment_circuit_field_boundary_test.go` — Gnark payment-circuit field-boundary tests.
 - `tests/field_boundary_handler_test.go` — payment HTTP-handler field-boundary tests.
 - `tests/erc20_scanner_token_id_boundary_test.go` — native ERC20 scanner token-ID upper-boundary test.
+- `tests/29_v2_malformed_capsule_deposit_test.go` — local Payment runtime test for malformed ML-KEM capsule deposits and scanner rejection.
+- `experiments/EXP-MLK-006.md` — experiment design, setup, and evidence record for the local runtime test.
 - `enygma_retail_payments/private_tags/src/payment_note_validation_test.go` — payment-note plaintext-length validation test.
 - `enygma_retail_payments/shield_demo/engine/tags_test.go` — malformed matching private-tag event scanning test.
 
@@ -40,13 +42,13 @@ The research artifacts are preserved copies of tests associated with that source
 
 The test files are preserved as evidence artifacts, not as a self-contained Go module. To reproduce an experiment, use the corresponding official Enygma source checkout at the recorded revision and place or compare the relevant test file in its original package.
 
-The milestone register records the exact commands where they were captured. Where an exact command or raw terminal transcript was not preserved, that limitation is stated rather than reconstructed.
+The milestone register and individual experiment records preserve exact reproduction commands where available. Where an exact command or raw terminal transcript was not preserved, that limitation is stated rather than reconstructed.
 
 Do not assume that every test can be run from this repository root. The original source package, dependencies, configuration, and—in integration cases—local services or deployment artifacts may be required.
 
 ## Evidence interpretation
 
-The register distinguishes executed experiments, source inspection, and existing-test-source analysis. A passing test demonstrates the behaviour of its tested code path and fixture; it does not automatically establish production reachability or exploitability.
+The register distinguishes executed experiments, source inspection, and existing-test-source analysis. A passing test demonstrates the behaviour of its tested code path and fixture; it does not automatically establish production reachability or exploitability. EXP-MLK-006 additionally demonstrates malformed-capsule deposit and scanner behaviour on an initialized local Hardhat Payment deployment; production Rayls network behaviour remains unverified.
 
 This research does not establish:
 
