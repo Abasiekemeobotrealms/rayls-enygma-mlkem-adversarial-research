@@ -22,10 +22,10 @@ This research does not establish system-wide post-quantum security, production e
 - Branch: `main`
 - Revision: `79c82dfb57595681b03d8da344702ef606f3a621`
 
-**Private research repository**
+**Public research repository**
 - Repository: `Abasiekemeobotrealms/rayls-enygma-mlkem-adversarial-research`
 - GitHub: `Abasiekemeobotrealms/rayls-enygma-mlkem-adversarial-research`
-- Visibility: Private
+- Visibility: Public
 
 The research repository is separate from the official source repository.
 
@@ -37,7 +37,15 @@ The research repository is separate from the official source repository.
 - Git: `2.56.0`
 - GitHub CLI: `2.103.3`
 
-## 4. Milestone M-001 — Shared scanner implementation
+## 4. Evidence artifacts
+
+**Focused test executions (2026-11-15):** `evidence/focused-test-execution-2026-11-15.md`
+
+**SHA-256:** `c7fc9ff0d277c8fda99570a2775129dd6ad416e35e7dfec7c063a2152512322b`
+
+The transcript preserves the commands and raw terminal output for EXP-MLK-002, EXP-MLK-003, EXP-MLK-004, EXP-MLK-005 and EXP-TAG-001. It records five selected focused test executions, not executions of every related package suite or a production-network test.
+
+## 5. Milestone M-001 — Shared scanner implementation
 
 **Status:** Source inspection completed.
 
@@ -64,7 +72,7 @@ All four scanner families inspected:
 - ERC1155
 - ZK DvP
 
-## 5. Milestone M-002 — ML-KEM ciphertext semantics
+## 6. Milestone M-002 — ML-KEM ciphertext semantics
 
 **Status:** Source and standard-library documentation inspected.
 
@@ -78,7 +86,7 @@ Observed:
 Research implication: malformed-length and correctly sized corrupted ciphertexts exercise different branches in the scanner. They must be tested separately.
 
 
-## 6. Milestone M-003 — Adversarial scanner regression experiments
+## 7. Milestone M-003 — Adversarial scanner regression experiments
 
 **Status:** Passed. Permanent tests executed successfully.
 
@@ -125,8 +133,13 @@ Incorrect-length ciphertexts cause decapsulation errors and are reported as bad 
 
 These findings apply to the tested fixtures and mutation. They do not establish behaviour for every possible corrupted ciphertext or prove remote denial of service or production exploitability.
 
+**Focused test execution evidence (2026-11-15):**
+- [EXP-MLK-002 transcript](../evidence/focused-test-execution-2026-11-15.md#L9)
+- [EXP-MLK-003 transcript](../evidence/focused-test-execution-2026-11-15.md#L38)
+- [EXP-MLK-004 transcript](../evidence/focused-test-execution-2026-11-15.md#L59)
 
-## 7. Milestone M-004 — Encrypted-note ciphertext substitution
+
+## 8. Milestone M-004 — Encrypted-note ciphertext substitution
 
 **Status:** Existing integration-test source inspected; independent execution not completed.
 
@@ -170,9 +183,9 @@ Independent execution was not possible in the inspected environment: the local H
 This is evidence of a documented ERC20 partial-withdrawal ciphertext-substitution path in an existing regression test. It does not establish fund theft, loss, double-spending, or exploitability across other settlement paths.
 
 
-## 8. EXP-TAG-001 — Malformed private-tag event aborts the scan
+## 9. EXP-TAG-001 — Malformed private-tag event aborts the scan
 
-**Status:** Passed. Focused regression test and full engine package suite passed.
+**Status:** Focused regression test passed in the 2026-11-15 execution. The full engine package suite passed in an earlier recorded execution; it was not repeated as part of this evidence batch.
 
 **Subsystem:** `enygma_retail_payments/shield_demo/engine` private-tag notification scanner.
 
@@ -186,12 +199,12 @@ This is evidence of a documented ERC20 partial-withdrawal ciphertext-substitutio
 
 **Observed result:** The malformed matching event caused `scanTags()` to return an error. The later valid event was not processed in that scan. The cursor remained unchanged, and retry queried the same block range. The later event was independently verified as decryptable.
 
-**Execution:** The focused regression test passed, and `go test ./engine -count=1 -v` passed the complete engine package suite.
+**Execution:** The focused regression test was executed successfully on 2026-11-15. The complete engine package suite had passed in an earlier execution; it was not included in this evidence batch. See the [focused-test execution transcript](../evidence/focused-test-execution-2026-11-15.md#L115).
 
 **Limitations:** This demonstrates the behavior for the tested event fixture. A matching tag is a precondition; this does not prove arbitrary external parties can create matching events, remote denial of service, production exploitability, asset loss, or system-wide outage. The `tagLogReader` interface is a test seam; production assigns the real Ethereum client.
 
 
-## 9. EXP-FIELD-001 — Negative inputs accepted as BN254 field representatives
+## 10. EXP-FIELD-001 — Negative inputs accepted as BN254 field representatives
 
 **Status:** Native commitment, Gnark circuit, and HTTP handler test evidence preserved. The relevant tests passed in the recorded executions.
 
@@ -239,7 +252,7 @@ The native behavior is consistent with the inspected `go-iden3-crypto` field che
 
 **Assessment:** A reproducible negative-integer/canonical-field-equivalence behavior exists in the tested native, circuit, and handler paths. Whether it constitutes a security vulnerability depends on the missing production reachability and downstream validation evidence.
 
-## 10. EXP-FIELD-002 — Native ERC-20 scanner accepts token ID R-1
+## 11. EXP-FIELD-002 — Native ERC-20 scanner accepts token ID R-1
 
 **Status:** Executed successfully. The focused scanner test and the complete native `core` package test suite passed.
 
@@ -309,9 +322,9 @@ Executed from `enygma_dvp/src`:
 
 **Assessment:** The native ERC-20 scanner accepts and recovers a correctly encrypted note with token ID R-1. This is a reproducible boundary-acceptance observation. Its security significance depends on intended token-ID semantics and downstream application and contract validation.
 
-## 11. EXP-MLK-005 — Payment-note plaintext-length validation
+## 12. EXP-MLK-005 — Payment-note plaintext-length validation
 
-**Status:** Test artifact preserved; the test was included in the completed payment-note validation investigation. The exact invocation and raw terminal transcript are not recorded in this register.
+**Status:** Focused test execution passed on 2026-11-15. The original test artifact and its execution transcript are preserved.
 
 **Subsystem:** `enygma_retail_payments/private_tags/src`.
 
@@ -335,6 +348,13 @@ The test derives a block key and encrypts plaintexts of three lengths using `Enc
 
 For the two invalid lengths, the test checks for an error containing `unexpected plaintext length`. For the valid length, it checks that decryption succeeds and returns a non-nil note.
 
+**Recorded reproduction (2026-11-15):**
+```bash
+cd /workspaces/Enygma/enygma_retail_payments/private_tags/src
+GOTOOLCHAIN=local go test . -run '^TestDecryptPaymentNote_PlaintextLength$' -v -count=1
+```
+The recorded execution passed all three cases. See the [raw execution transcript](../evidence/focused-test-execution-2026-11-15.md#L88).
+
 ### Recorded test assertions
 
 The preserved test asserts rejection of 95-byte and 97-byte plaintexts and acceptance of a 96-byte plaintext. The test source is retained in this repository for reviewer inspection.
@@ -344,9 +364,10 @@ The preserved test asserts rejection of 95-byte and 97-byte plaintexts and accep
 - This test concerns payment-note plaintext-length validation after authenticated decryption.
 - It does not establish that malformed ciphertext can be emitted by an on-chain contract.
 - It does not, by itself, demonstrate interruption of private-tag scanning, cursor non-advancement, retry behaviour, remote denial of service, or production exploitability.
-- The exact execution command and raw output should not be inferred from the test source.
+- This is a focused unit-test execution; it does not establish on-chain reachability or production exploitability.
 
 **Assessment:** The preserved test documents the expected 96-byte payment-note plaintext boundary. Its result should be interpreted within that validation path and not conflated with the separate private-tag scan-interruption experiment EXP-TAG-001.
+
 
 ## EXP-MLK-006 — Malformed capsule deposit runtime reachability
 
@@ -365,3 +386,22 @@ The preserved test asserts rejection of 95-byte and 97-byte plaintexts and accep
 **Reproduction:** See the exact command and environment in `experiments/EXP-MLK-006.md`.
 
 **Evidence boundary:** This demonstrates runtime reachability on the initialized local Hardhat deployment. It does not establish behavior on a production Rayls network, exploitation, loss of funds, or denial of service.
+
+<!-- five-experiment-report-register -->
+## Focused experiment report publication index
+
+The following completed experiment reports are documented to the same evidence standard as EXP-MLK-006. Their individual hypotheses, test designs, source provenance, reproduction commands, results, and limitations are recorded in the linked reports.
+
+| Experiment | Report |
+|---|---|
+| EXP-MLK-002 | [Invalid ML-KEM ciphertext lengths](../experiments/EXP-MLK-002.md) |
+| EXP-MLK-003 | [Correct-length corrupted ciphertext](../experiments/EXP-MLK-003.md) |
+| EXP-MLK-004 | [Correct-length corruption across scanner families](../experiments/EXP-MLK-004.md) |
+| EXP-MLK-005 | [Payment-note plaintext length boundary](../experiments/EXP-MLK-005.md) |
+| EXP-TAG-001 | [Malformed matching private-tag event aborts scanning](../experiments/EXP-TAG-001.md) |
+
+**Shared execution evidence:** `evidence/focused-test-execution-2026-11-15.md`
+
+**Transcript SHA-256:** `c7fc9ff0d277c8fda99570a2775129dd6ad416e35e7dfec7c063a2152512322b`
+
+**Submission context:** The researcher confirms that the experiment walkthrough videos are embedded in the corresponding sections of the submitted X article. No new recordings or separate video artifacts are required for this repository update.
